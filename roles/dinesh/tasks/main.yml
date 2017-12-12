@@ -1,0 +1,62 @@
+---
+# tasks file for dinesh
+    - name: update
+      apt: update_cache=yes
+     
+    - name: upgrade
+      apt:
+        upgrade=dist
+        force=yes
+
+    - name: install package
+      apt: name=python-openstackclient state=present
+
+    - name: database parameters
+      debconf: name='mariadb-server' question='mysql-server/{{item}}' value='root' vtype='password'
+      with_items:
+        - root-password
+        - root-password-again
+    - name: install packages
+      apt: name={{item}}  state=present
+      with_items: 
+        - mariadb-server
+        - python-mysqldb
+    
+    - name:
+      template:
+        src: openstack.cnf.j2
+        dest: /etc/mysql/conf.d/openstack.cnf
+      notify: service restart
+   
+    - name: install package
+      apt: name={{item}} state=present
+      with_items:
+        - rabbitmq-server
+      when: ansible_os_family == 'Debian'
+
+#    - name: add user
+#      rabbitmq_user:
+#        user: openstack
+#        password: openstack    
+#        permissions: 
+#          - vhost: /
+#            configure_priv: .*
+#            read_priv: .*
+#            write_priv: .*
+#        state: present
+
+    - name: install package
+      apt: name={{item}} state=present 
+      with_items:
+        - memcached
+        - python-memcache
+      when: ansible_os_family == 'Debian'
+
+    - name: install apache2
+      apt: name=apache2 state=present
+      when: ansible_os_family == 'Debian'
+
+    - name: servername
+      lineinfile: dest=/etc/apache2/apache2.conf
+                  line='ServreName controller'
+   

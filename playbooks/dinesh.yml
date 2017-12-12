@@ -1,0 +1,4 @@
+---
+- hosts: dinesh
+  roles:
+    - dinesh

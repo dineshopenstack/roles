@@ -1,0 +1,8 @@
+---
+# handlers file for dinesh
+- name: service restart
+  service: name=mysql state=restarted
+
+- name: service restart
+  service: name=memcached state=restarted
+

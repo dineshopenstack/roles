@@ -1,0 +1,5 @@
+- name: install package
+  apt: name=software-properties-common state=present
+     
+- name: add repository
+  apt_repository: repo='deb http://ubuntu-cloud.archive.canonical.com/ubuntu trusty-updates/mitaka main' filename=cloudarchive-mitaka.list state=present

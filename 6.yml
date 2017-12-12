@@ -1,0 +1,16 @@
+---
+- hosts: all
+  tasks:
+    - name: install package
+      apt: name={{item}} state=present
+      with_items:
+        - memcached
+        - python-memcache
+      when: ansible_os_family == 'Debian'
+
+    - name: add line
+      lineinfile:
+        path: /etc/memcached.conf
+        regexp: '-l 127.0.0.1'
+        line: '-l 10.10.10.10'
+
